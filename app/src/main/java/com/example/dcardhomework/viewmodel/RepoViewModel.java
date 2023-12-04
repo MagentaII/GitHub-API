@@ -17,6 +17,8 @@ import com.example.dcardhomework.helper.AbsentLiveData;
 import com.example.dcardhomework.helper.ApiResponse;
 import com.example.dcardhomework.model.Repository;
 
+import kotlin.jvm.functions.Function1;
+
 public class RepoViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> query = new MutableLiveData<>();
@@ -30,17 +32,18 @@ public class RepoViewModel extends AndroidViewModel {
         public RepoViewModel(@NonNull Application application) {
         super(application);
         repository = new Repository();
-        itemsListLive = Transformations.switchMap(query, new Function<String, LiveData<ApiResponse<Repo>>>() {
+
+        itemsListLive = Transformations.switchMap(query, new Function1<String, LiveData<ApiResponse<Repo>>>() {
             @Override
-            public LiveData<ApiResponse<Repo>> apply(String userInput) {
-                if (TextUtils.isEmpty(userInput)) {
+            public LiveData<ApiResponse<Repo>> invoke(String s) {
+                if (TextUtils.isEmpty(s)) {
                     return AbsentLiveData.create();
                 } else {
-                    return repository.searchRepo(userInput);
+                    return repository.searchRepo(s);
                 }
             }
         });
-        singleRepoLive = new MutableLiveData<>();
+            singleRepoLive = new MutableLiveData<>();
     }
 
     public LiveData<ApiResponse<Repo>> getItemsListLive() {
@@ -66,7 +69,3 @@ public class RepoViewModel extends AndroidViewModel {
         });
     }
 }
-
-
-
-
