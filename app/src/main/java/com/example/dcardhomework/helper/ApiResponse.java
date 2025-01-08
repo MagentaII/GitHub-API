@@ -10,24 +10,22 @@ import timber.log.Timber;
 public class ApiResponse<T> {
 
     public final int code;
-
     @Nullable
     public final T body;
-
     @Nullable
     public final String errorMessage;
 
     public ApiResponse(Throwable error) {
-        code = 500;
-        body = null;
-        errorMessage = error.getMessage();
+        this.code = 500;
+        this.body = null;
+        this.errorMessage = error.getMessage();
     }
 
     public ApiResponse(Response<T> response) {
-        code = response.code();
-        if(response.isSuccessful()) {
-            body = response.body();
-            errorMessage = null;
+        this.code = response.code();
+        if (response.isSuccessful()) {
+            this.body = response.body();
+            this.errorMessage = null;
         } else {
             String message = null;
             if (response.errorBody() != null) {
@@ -40,12 +38,12 @@ public class ApiResponse<T> {
             if (message == null || message.trim().length() == 0) {
                 message = response.message();
             }
-            errorMessage = message;
-            body = null;
+            this.errorMessage = message;
+            this.body = null;
         }
     }
 
     public boolean isSuccessful() {
-        return code >= 200 && code < 300;
+        return this.code >= 200 && this.code < 300;
     }
 }

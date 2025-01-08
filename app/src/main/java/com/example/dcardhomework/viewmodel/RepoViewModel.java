@@ -4,7 +4,6 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.util.Function;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -26,10 +25,9 @@ public class RepoViewModel extends AndroidViewModel {
     public final ObservableBoolean isError = new ObservableBoolean(false);
 
     private final LiveData<ApiResponse<Repo>> itemsListLive;
-    private final MutableLiveData<SingleRepo> singleRepoLive;
     private final Repository repository;
 
-        public RepoViewModel(@NonNull Application application) {
+    public RepoViewModel(@NonNull Application application) {
         super(application);
         repository = new Repository();
 
@@ -37,21 +35,16 @@ public class RepoViewModel extends AndroidViewModel {
             @Override
             public LiveData<ApiResponse<Repo>> invoke(String s) {
                 if (TextUtils.isEmpty(s)) {
-                    return AbsentLiveData.create();
+                    return AbsentLiveData.create(); // 呼叫靜態方法，返回值為null的LiveData
                 } else {
                     return repository.searchRepo(s);
                 }
             }
         });
-            singleRepoLive = new MutableLiveData<>();
     }
 
     public LiveData<ApiResponse<Repo>> getItemsListLive() {
         return itemsListLive;
-    }
-
-    public MutableLiveData<SingleRepo> getSingleRepoLive() {
-        return singleRepoLive;
     }
 
 
@@ -59,13 +52,8 @@ public class RepoViewModel extends AndroidViewModel {
         query.setValue(userInput);
     }
 
-    //利用callback的方式
-    public void getSingleRepo(String login, String name){
-        repository.getSingleRepo(login, name, new Repository.onFullNameCallback() {
-            @Override
-            public void sendFullName(SingleRepo singleRepo) {
-                singleRepoLive.setValue(singleRepo);
-            }
-        });
+
+    public LiveData<ApiResponse<SingleRepo>> getRepoDetail(String login, String name) {
+        return repository.getRepoDetail(login, name);
     }
 }

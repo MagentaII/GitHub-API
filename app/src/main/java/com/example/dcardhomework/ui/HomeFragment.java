@@ -60,18 +60,20 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
             Repo data = repoApiResponse.body;
             String msg = repoApiResponse.errorMessage;
             if (repoApiResponse.isSuccessful()) {
-                assert repoApiResponse.body != null;
-                repoAdapter.swapItems(repoApiResponse.body.getItems());
-                new CountDownTimer(1200, 1000){
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                    }
-                    @Override
-                    public void onFinish() {
-                        binding.viewBackground.setVisibility(View.GONE);
-                    }
-                }.start();
+                if (data != null) {
+                    repoAdapter.swapItems(data.getItems());
+                    new CountDownTimer(1200, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            // do not anything
+                        }
 
+                        @Override
+                        public void onFinish() {
+                            binding.viewBackground.setVisibility(View.GONE);
+                        }
+                    }.start();
+                }
             } else {
                 binding.viewBackground.setVisibility(View.VISIBLE);
                 repoViewModel.isError.set(true);

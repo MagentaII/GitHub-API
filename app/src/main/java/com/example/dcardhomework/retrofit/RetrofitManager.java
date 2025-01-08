@@ -16,7 +16,7 @@ public class RetrofitManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
+                .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
                 .build();
 
         githubAPIService = retrofit.create(GithubAPIService.class);

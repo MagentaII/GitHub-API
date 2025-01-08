@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.dcardhomework.R;
 import com.example.dcardhomework.data.Items;
+import com.example.dcardhomework.data.Repo;
+import com.example.dcardhomework.data.SingleRepo;
 import com.example.dcardhomework.viewmodel.RepoViewModel;
 
 public class DetailFragment extends Fragment {
@@ -42,8 +44,20 @@ public class DetailFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener("requestRepo", this, (requestKey, result) -> {
             items = result.getParcelable("repo");
-            repoViewModel.getSingleRepo(items.getOwner().getLogin(), items.getName());
-            repoViewModel.getSingleRepoLive().observe(requireActivity(), singleRepo -> tvWatch.setText(String.valueOf(singleRepo.getSubscribers_count())));
+            repoViewModel.getRepoDetail(items.getOwner().getLogin(), items.getName()).observe(requireActivity(), singleRepoApiResponse -> {
+                int code = singleRepoApiResponse.code;
+                SingleRepo data = singleRepoApiResponse.body;
+                String msg = singleRepoApiResponse.errorMessage;
+                if (singleRepoApiResponse.isSuccessful()) {
+                    if (data != null) {
+                        tvWatch.setText(
+                                String.valueOf(
+                                        data.getSubscribers_count()
+                                )
+                        );
+                    }
+                }
+            });
             Glide.with(requireActivity()).load(items.getOwner().getAvatar_url()).into(imgRepo);
             tvName.setText(items.getName());
             if (items.getDescription() == null) {

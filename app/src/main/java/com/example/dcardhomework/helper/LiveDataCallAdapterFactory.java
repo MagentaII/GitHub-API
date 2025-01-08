@@ -12,19 +12,24 @@ import retrofit2.Retrofit;
 
 public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     @Override
-    public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
+    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
         if (getRawType(returnType) != LiveData.class) {
-            return null;
+            return null; // 只處理LiveData類型
         }
-        Type observableType = getParameterUpperBound(0, (ParameterizedType) returnType);
-        Class<?> rawObservableType = getRawType(observableType);
-        if (rawObservableType != ApiResponse.class) {
+        Type responseType = getParameterUpperBound(0, (ParameterizedType) returnType); // 取得第一個泛型的類型
+        Class<?> rawResponseType = getRawType(responseType); // 取得第一個泛型的原始類型
+        if (rawResponseType != ApiResponse.class) {
             throw new IllegalArgumentException("type must be a resource");
         }
-        if (! (observableType instanceof ParameterizedType)) {
+        // responseType是否是包含泛型的類型
+        if (!(responseType instanceof ParameterizedType)) {
             throw new IllegalArgumentException("resource must be parameterized");
         }
-        Type bodyType = getParameterUpperBound(0, (ParameterizedType) observableType);
-        return new LiveDataCallAdapter<>(bodyType);
+        Type type = getParameterUpperBound(0, (ParameterizedType) responseType);
+        return new LiveDataCallAdapter<>(type);
+    }
+
+    public static LiveDataCallAdapterFactory create() {
+        return new LiveDataCallAdapterFactory();
     }
 }
