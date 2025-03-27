@@ -1,4 +1,4 @@
-package com.example.dcardhomework.data;
+package com.example.dcardhomework.data.models;
 
 import com.google.gson.annotations.SerializedName;
 

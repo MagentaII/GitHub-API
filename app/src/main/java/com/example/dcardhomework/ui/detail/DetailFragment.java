@@ -1,4 +1,4 @@
-package com.example.dcardhomework.ui;
+package com.example.dcardhomework.ui.detail;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,10 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.dcardhomework.R;
-import com.example.dcardhomework.data.Items;
-import com.example.dcardhomework.data.Repo;
-import com.example.dcardhomework.data.SingleRepo;
-import com.example.dcardhomework.viewmodel.RepoViewModel;
+import com.example.dcardhomework.data.models.Items;
+import com.example.dcardhomework.data.models.SingleRepo;
 
 public class DetailFragment extends Fragment {
 
@@ -28,7 +26,7 @@ public class DetailFragment extends Fragment {
     private TextView tvName, tvDes, tvStart, tvWatch, tvFork, tvLanguages, tvOwner;
     private Button btnToWeb;
     private Items items;
-    private RepoViewModel repoViewModel;
+    private DetailViewModel detailViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +42,7 @@ public class DetailFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener("requestRepo", this, (requestKey, result) -> {
             items = result.getParcelable("repo");
-            repoViewModel.getRepoDetail(items.getOwner().getLogin(), items.getName()).observe(requireActivity(), singleRepoApiResponse -> {
+            detailViewModel.getRepoDetail(items.getOwner().getLogin(), items.getName()).observe(requireActivity(), singleRepoApiResponse -> {
                 int code = singleRepoApiResponse.code;
                 SingleRepo data = singleRepoApiResponse.body;
                 String msg = singleRepoApiResponse.errorMessage;
@@ -93,6 +91,6 @@ public class DetailFragment extends Fragment {
         tvLanguages = view.findViewById(R.id.tv_languages);
         tvOwner = view.findViewById(R.id.tv_owner);
         btnToWeb = view.findViewById(R.id.btn_to_web);
-        repoViewModel = new ViewModelProvider(requireActivity()).get(RepoViewModel.class);
+        detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
     }
 }

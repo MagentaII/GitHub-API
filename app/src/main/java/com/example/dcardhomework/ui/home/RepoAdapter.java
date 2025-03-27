@@ -1,4 +1,4 @@
-package com.example.dcardhomework.ui;
+package com.example.dcardhomework.ui.home;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.dcardhomework.R;
-import com.example.dcardhomework.data.Items;
+import com.example.dcardhomework.data.models.Items;
 import com.example.dcardhomework.databinding.CellRepoBinding;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.dcardhomework.ui;
+package com.example.dcardhomework.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,10 +16,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.dcardhomework.R;
-import com.example.dcardhomework.data.Items;
-import com.example.dcardhomework.data.Repo;
+import com.example.dcardhomework.data.models.Items;
+import com.example.dcardhomework.data.models.Repo;
 import com.example.dcardhomework.databinding.FragmentHomeBinding;
-import com.example.dcardhomework.viewmodel.RepoViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements RepoAdapter.ClickedListeners {
 
     private FragmentHomeBinding binding;
-    private RepoViewModel repoViewModel;
+    private HomeViewModel homeViewModel;
     private RepoAdapter repoAdapter;
     private final List<Items> itemsList = new ArrayList<>();
 
@@ -50,12 +49,12 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        repoViewModel = new ViewModelProvider(requireActivity()).get(RepoViewModel.class);
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-        binding.setViewModel(repoViewModel);
+        binding.setViewModel(homeViewModel);
 
-        repoViewModel.getItemsListLive().observe(requireActivity(), repoApiResponse -> {
-            repoViewModel.isLoading.set(false);
+        homeViewModel.getItemsListLive().observe(requireActivity(), repoApiResponse -> {
+            homeViewModel.isLoading.set(false);
             int code = repoApiResponse.code;
             Repo data = repoApiResponse.body;
             String msg = repoApiResponse.errorMessage;
@@ -76,7 +75,7 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
                 }
             } else {
                 binding.viewBackground.setVisibility(View.VISIBLE);
-                repoViewModel.isError.set(true);
+                homeViewModel.isError.set(true);
             }
         });
     }
@@ -84,10 +83,10 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
     // 搜尋
     private void doSearch() {
         String query = binding.etSearchRepo.getText().toString();
-        repoViewModel.searchRepo(query);
+        homeViewModel.searchRepo(query);
         binding.viewBackground.setVisibility(View.VISIBLE);
-        repoViewModel.isError.set(false);
-        repoViewModel.isLoading.set(true);
+        homeViewModel.isError.set(false);
+        homeViewModel.isLoading.set(true);
         dismissKeyboard();
         binding.etSearchRepo.getText().clear();
     }
