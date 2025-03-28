@@ -3,6 +3,7 @@ package com.example.dcardhomework.ui.home;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +28,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements RepoAdapter.ClickedListeners {
 
+    private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
     private RepoAdapter repoAdapter;
@@ -33,60 +37,55 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        // Initialize DataBinding
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
 
-        binding.imgSearch.setOnClickListener(v -> doSearch());
+        // Initialize ViewModel
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        // Set the ViewModel in the binding
+        binding.setViewModel(homeViewModel);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        // Initialize the RecyclerView and Adapter
         repoAdapter = new RepoAdapter(itemsList, getContext(), this);
         binding.rvRepo.setHasFixedSize(true);
         binding.rvRepo.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         binding.rvRepo.setAdapter(repoAdapter);
 
-        return binding.getRoot();
-    }
+        // Observe the UI state from ViewModel
+        homeViewModel.uiState.observe(getViewLifecycleOwner(), new Observer<HomeUiState>() {
+            @Override
+            public void onChanged(HomeUiState homeUiState) {
+                Log.d(
+                        TAG,
+                        "isLoading: " + homeUiState.isLoading() +
+                                " Items: " + homeUiState.getItems() +
+                                " isError: " + homeUiState.isError()
+                );
+                if (homeUiState == null) return;
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+                binding.viewBackground.setVisibility(homeUiState.isLoading() ? View.VISIBLE : View.GONE);
 
-        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-
-        binding.setViewModel(homeViewModel);
-
-        homeViewModel.getItemsListLive().observe(requireActivity(), repoApiResponse -> {
-            homeViewModel.isLoading.set(false);
-            int code = repoApiResponse.code;
-            Repo data = repoApiResponse.body;
-            String msg = repoApiResponse.errorMessage;
-            if (repoApiResponse.isSuccessful()) {
-                if (data != null) {
-                    repoAdapter.swapItems(data.getItems());
-                    new CountDownTimer(1200, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            // do not anything
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            binding.viewBackground.setVisibility(View.GONE);
-                        }
-                    }.start();
+                if (homeUiState.getItems() != null) {
+                    repoAdapter.swapItems(homeUiState.getItems().getItems());
+                } else {
+                    repoAdapter.swapItems(null);
                 }
-            } else {
-                binding.viewBackground.setVisibility(View.VISIBLE);
-                homeViewModel.isError.set(true);
+
+                binding.viewBackground.setVisibility(homeUiState.isError() ? View.VISIBLE : View.GONE);
             }
         });
+
+        binding.imgSearch.setOnClickListener(v -> doSearch());
+
+        return binding.getRoot();
     }
 
     // 搜尋
     private void doSearch() {
         String query = binding.etSearchRepo.getText().toString();
         homeViewModel.searchRepo(query);
-        binding.viewBackground.setVisibility(View.VISIBLE);
-        homeViewModel.isError.set(false);
-        homeViewModel.isLoading.set(true);
         dismissKeyboard();
         binding.etSearchRepo.getText().clear();
     }

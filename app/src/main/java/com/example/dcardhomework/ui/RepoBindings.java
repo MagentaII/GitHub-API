@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide;
 public class RepoBindings {
     //progressBar的顯示或隱藏
     @BindingAdapter("visibleGone")
-    public static void showHide(View view, boolean show){
-        view.setVisibility(show? View.VISIBLE : View.GONE);
+    public static void setVisibleGone(View view, boolean isVisible){
+        view.setVisibility(isVisible? View.VISIBLE : View.GONE);
     }
 
     // 圖片+ databinding無法成功

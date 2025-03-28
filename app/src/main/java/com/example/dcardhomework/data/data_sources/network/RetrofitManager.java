@@ -1,6 +1,5 @@
 package com.example.dcardhomework.data.data_sources.network;
 
-import com.example.dcardhomework.helper.LiveDataCallAdapterFactory;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
@@ -17,7 +16,6 @@ public class RetrofitManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-//                .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
 

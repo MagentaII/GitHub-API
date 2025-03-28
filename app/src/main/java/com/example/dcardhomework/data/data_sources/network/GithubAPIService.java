@@ -18,5 +18,5 @@ public interface GithubAPIService {
 
 
     @GET("repos/{login}/{name}")
-    Single<ApiResponse<SingleRepo>> getRepoDetail(@Path("login") String login, @Path("name") String name);
+    Single<SingleRepo> getRepoDetail(@Path("login") String login, @Path("name") String name);
 }

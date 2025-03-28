@@ -1,6 +1,10 @@
 package com.example.dcardhomework.helper;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 

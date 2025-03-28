@@ -27,4 +27,12 @@ public class Repo {
     public void setItems(List<Items> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "Repo{" +
+                "total_count=" + total_count +
+                ", items=" + (items != null ? items.toString() : "null") +
+                '}';
+    }
 }
