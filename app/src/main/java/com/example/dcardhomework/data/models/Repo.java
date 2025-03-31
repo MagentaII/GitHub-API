@@ -1,5 +1,7 @@
 package com.example.dcardhomework.data.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class Repo {
         this.items = items;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Repo{" +

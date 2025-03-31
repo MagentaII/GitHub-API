@@ -1,7 +1,6 @@
-package com.example.dcardhomework.ui.home;
+package com.example.dcardhomework.ui.screens.home;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.example.dcardhomework.data.models.Repo;
 

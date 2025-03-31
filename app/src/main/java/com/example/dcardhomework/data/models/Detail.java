@@ -2,7 +2,7 @@ package com.example.dcardhomework.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SingleRepo {
+public class Detail {
     @SerializedName("subscribers_count")
     private int subscribers_count;
 

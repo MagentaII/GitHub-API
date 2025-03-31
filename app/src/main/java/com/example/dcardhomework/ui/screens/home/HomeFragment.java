@@ -1,8 +1,7 @@
-package com.example.dcardhomework.ui.home;
+package com.example.dcardhomework.ui.screens.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +9,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.dcardhomework.R;
 import com.example.dcardhomework.data.models.Items;
-import com.example.dcardhomework.data.models.Repo;
 import com.example.dcardhomework.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
@@ -54,27 +50,23 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
         binding.rvRepo.setAdapter(repoAdapter);
 
         // Observe the UI state from ViewModel
-        homeViewModel.uiState.observe(getViewLifecycleOwner(), new Observer<HomeUiState>() {
-            @Override
-            public void onChanged(HomeUiState homeUiState) {
-                Log.d(
-                        TAG,
-                        "isLoading: " + homeUiState.isLoading() +
-                                " Items: " + homeUiState.getItems() +
-                                " isError: " + homeUiState.isError()
-                );
-                if (homeUiState == null) return;
+        homeViewModel.uiState.observe(getViewLifecycleOwner(), homeUiState -> {
+            Log.d(
+                    TAG,
+                    "isLoading: " + homeUiState.isLoading() +
+                            " Items: " + homeUiState.getItems() +
+                            " isError: " + homeUiState.isError()
+            );
 
-                binding.viewBackground.setVisibility(homeUiState.isLoading() ? View.VISIBLE : View.GONE);
+            binding.viewBackground.setVisibility(homeUiState.isLoading() ? View.VISIBLE : View.GONE);
 
-                if (homeUiState.getItems() != null) {
-                    repoAdapter.swapItems(homeUiState.getItems().getItems());
-                } else {
-                    repoAdapter.swapItems(null);
-                }
-
-                binding.viewBackground.setVisibility(homeUiState.isError() ? View.VISIBLE : View.GONE);
+            if (homeUiState.getItems() != null) {
+                repoAdapter.swapItems(homeUiState.getItems().getItems());
+            } else {
+                repoAdapter.swapItems(null);
             }
+
+            binding.viewBackground.setVisibility(homeUiState.isError() ? View.VISIBLE : View.GONE);
         });
 
         binding.imgSearch.setOnClickListener(v -> doSearch());
@@ -95,7 +87,7 @@ public class HomeFragment extends Fragment implements RepoAdapter.ClickedListene
         View view = requireActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm =
-                    (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

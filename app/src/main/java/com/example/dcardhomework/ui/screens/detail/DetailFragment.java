@@ -1,9 +1,8 @@
-package com.example.dcardhomework.ui.detail;
+package com.example.dcardhomework.ui.screens.detail;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.dcardhomework.R;
 import com.example.dcardhomework.data.models.Items;
-import com.example.dcardhomework.data.models.SingleRepo;
-import com.example.dcardhomework.helper.ApiResponse;
-import com.example.dcardhomework.ui.home.HomeViewModel;
 
 public class DetailFragment extends Fragment {
 
@@ -47,20 +42,18 @@ public class DetailFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener("requestRepo", this, (requestKey, result) -> {
             items = result.getParcelable("repo");
+            if (items == null) return;
             detailViewModel.NavigateRepoDetail(items.getOwner().getLogin(), items.getName());
-            detailViewModel.uiState.observe(getViewLifecycleOwner(), new Observer<DetailUiState>() {
-                @Override
-                public void onChanged(DetailUiState detailUiState) {
-                    if (detailUiState == null) return;
+            detailViewModel.uiState.observe(getViewLifecycleOwner(), detailUiState -> {
+                if (detailUiState == null) return;
 
 
-                    if (detailUiState.getItem() != null) {
-                        tvWatch.setText(
-                                String.valueOf(
-                                        detailUiState.getItem().getSubscribers_count()
-                                )
-                        );
-                    }
+                if (detailUiState.getItem() != null) {
+                    tvWatch.setText(
+                            String.valueOf(
+                                    detailUiState.getItem().getSubscribers_count()
+                            )
+                    );
                 }
             });
             Glide.with(requireActivity()).load(items.getOwner().getAvatar_url()).into(imgRepo);

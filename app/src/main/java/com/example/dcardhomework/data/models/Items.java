@@ -30,17 +30,6 @@ public class Items implements Parcelable {
     @SerializedName("forks_count")
     private int forks_count;
 
-//    public Items(int id, String name, String full_name, String description, int stargazers_count, Owner owner, String language, int forks_count) {
-//        this.id = id;
-//        this.name = name;
-//        this.full_name = full_name;
-//        this.description = description;
-//        this.stargazers_count = stargazers_count;
-//        this.owner = owner;
-//        this.language = language;
-//        this.forks_count = forks_count;
-//    }
-
     protected Items(Parcel in) {
         id = in.readInt();
         name = in.readString();

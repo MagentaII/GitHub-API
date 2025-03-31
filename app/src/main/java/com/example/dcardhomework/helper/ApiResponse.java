@@ -1,17 +1,13 @@
 package com.example.dcardhomework.helper;
 
 import android.util.Log;
-
 import androidx.annotation.Nullable;
-
-import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
-
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class ApiResponse<T> {
+
+    private static final String TAG = "ApiResponse";
 
     public final int code;
     @Nullable
@@ -36,7 +32,7 @@ public class ApiResponse<T> {
                 try {
                     message = response.errorBody().string();
                 } catch (IOException ignored) {
-                    Timber.e(ignored, "error while parsing response");
+                    Log.d(TAG, "error while parsing response: " + ignored);
                 }
             }
             if (message == null || message.trim().length() == 0) {

@@ -1,4 +1,4 @@
-package com.example.dcardhomework.ui.home;
+package com.example.dcardhomework.ui.screens.home;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -53,7 +53,7 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
     }
 
 
-    static class RepoViewHolder extends RecyclerView.ViewHolder {
+    public static class RepoViewHolder extends RecyclerView.ViewHolder {
         private final CellRepoBinding binding;
 
         public RepoViewHolder(CellRepoBinding binding) {

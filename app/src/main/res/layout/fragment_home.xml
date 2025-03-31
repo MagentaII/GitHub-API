@@ -7,14 +7,14 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.example.dcardhomework.ui.home.HomeViewModel" />
+            type="com.example.dcardhomework.ui.screens.home.HomeViewModel" />
 
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        tools:context=".ui.screens.home.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
